@@ -221,6 +221,18 @@ def game_over_screen():
 
     main()
 
+def change_level():
+    global level_index, current_level, level, total_score
+
+    total_score += current_level.get_level_score()
+
+    if level_index != 2:
+        level_index += 1
+        level = levels[level_index]
+        current_level = Level(level, WIN)
+
+    else:
+        play_outro()
 
 def main():
     global paused, run, current_level, level, game_state, total_score
@@ -253,6 +265,10 @@ def main():
             if game_state == "reset":
                 current_level = Level(level, WIN)
                 game_state = "playing"
+
+            current_level.run()
+            if current_level.check_player_health():
+                change_level()
 
             if settings.muted:
                 if unmute_button.draw(WIN) and click:
